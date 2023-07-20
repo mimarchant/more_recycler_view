@@ -5,9 +5,10 @@ import android.os.Bundle
 import com.example.kotlinexamples.PaisesLatam
 import com.example.recycler_view_countries.databinding.ActivityMainBinding
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), CountryCallback {
     private lateinit var binding: ActivityMainBinding
-    private val countryAdapter = CountryAdapter()
+    val countryAdapter = CountryAdapter()
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -21,7 +22,13 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun initAdapter() {
-        countryAdapter.setCountryList(PaisesLatam.paises)
+        countryAdapter.getCountryList(PaisesLatam.paises)
+        countryAdapter.setCountryCallback(this)
         binding.recyclerView.adapter = countryAdapter
+
+    }
+
+    override fun showCountry(s: String) {
+        binding.mainTitle.text = s
     }
 }

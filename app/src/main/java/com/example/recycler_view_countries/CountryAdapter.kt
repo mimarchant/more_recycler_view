@@ -10,7 +10,12 @@ import com.example.kotlinexamples.Pais
 import com.example.recycler_view_countries.databinding.CountryItemBinding
 
 class CountryAdapter : RecyclerView.Adapter<CountryAdapter.ViewHolder>() {
-    private var countryList = mutableListOf<Pais>()
+    var countryList = mutableListOf<Pais>()
+    var callback : CountryCallback? = null
+
+    fun setCountryCallback(c: CountryCallback) {
+        this.callback = c
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CountryAdapter.ViewHolder {
         val binding = CountryItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -27,12 +32,11 @@ class CountryAdapter : RecyclerView.Adapter<CountryAdapter.ViewHolder>() {
         return countryList.size
     }
 
-    fun setCountryList(country: List<Pais>) {
+    fun getCountryList(country: List<Pais>) {
         this.countryList = country.toMutableList()
-        notifyDataSetChanged()
     }
 
-    class ViewHolder(private val binding: CountryItemBinding) : RecyclerView.ViewHolder(binding.root) {
+    inner class ViewHolder(private val binding: CountryItemBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(country: Pais) {
             binding.countryName.text = country.nombre
             binding.countryPopulation.text = country.poblacion.toString()
@@ -43,12 +47,17 @@ class CountryAdapter : RecyclerView.Adapter<CountryAdapter.ViewHolder>() {
 
             val text = "Pais: ${country.nombre}\nPoblacion: ${country.poblacion}"
             binding.countryContainer.setOnClickListener(View.OnClickListener {
-                Toast.makeText(itemView.context,text, Toast.LENGTH_SHORT).show()
+                callback?.showCountry(text)
             })
         }
 
         }
     }
+
+
+ interface CountryCallback {
+    fun showCountry(s: String)
+}
 
 
 
